@@ -29,8 +29,6 @@ function expressionCalculator(str){
 
     // Function operation for "*,/,+,-"
     function operation(str, num1, num2) {
-        num1 = Number(num1);
-        num2 = Number(num2);
         switch (str) {
             case '*':{
                 return num1*num2;
@@ -62,7 +60,6 @@ function expressionCalculator(str){
                 return item;
             };
         });
-        console.log(arr);
         let arrRightBracke = arr.filter(function(item) {
             if(item === ")"){
                 return item;
@@ -71,13 +68,14 @@ function expressionCalculator(str){
         if (arrLeftBracke.length === arrRightBracke.length){
             return true;
         } else{
-            return false;
+            throw new Error("ExpressionError: Brackets must be paired");
         }
     }
 
     //stacks
+    checkBracke(str);
     str = getElementsArr(str);
-    console.log(str);
+
     let operatorStack = [];
     let numberStack = [];
     for(var i = 0; i < str.length;i++){
@@ -106,7 +104,6 @@ function expressionCalculator(str){
             operatorStack.push(str[i]);
         }
         else if (str[i] == ")"){
-            console.log(operatorStack);
             while (operatorStack[operatorStack.length-1] != "("){
                 let result = operation(operatorStack[operatorStack.length-1],numberStack[numberStack.length-2],numberStack[numberStack.length-1]);
                 numberStack.splice(numberStack.length-2,2);
@@ -115,8 +112,6 @@ function expressionCalculator(str){
             }
             operatorStack.splice(operatorStack.length-1,1);
         }
-        console.log("Operatr: "+ operatorStack);
-        console.log("Number: "+ numberStack);
 
     }
     while (numberStack.length > 1){
@@ -125,8 +120,7 @@ function expressionCalculator(str){
         numberStack.push(result);
         operatorStack.splice(operatorStack.length-1,1);
     }
-    console.log(numberStack[0].toFixed(4));
-    return numberStack[0].toFixed(4);
+    return numberStack[0];
 }
 
 module.exports = {
